@@ -145,6 +145,7 @@ namespace MongoDB.Driver.Core.Servers
                 var stopwatch = Stopwatch.StartNew();
                 _connectionPool.Initialize();
                 MonitorServerAsync().ConfigureAwait(false);
+	            //Task.Run(MonitorServerAsync);
                 stopwatch.Stop();
 
                 if (_openedEventHandler != null)
