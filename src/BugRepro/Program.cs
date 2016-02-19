@@ -26,32 +26,47 @@ namespace BugRepro
 		static IMongoDatabase db;
 		static IMongoCollection<BsonDocument> collection;
 
-		static async void TestFunc()
+		static async Task TestFunc()
 		{
-			client = new MongoClient("mongodb://localhost/");
-			db = client.GetDatabase("TestDB");
-			collection = db.GetCollection<BsonDocument>("TetsCollection");
-
-			var doc = new BsonDocument()
+		//	await Task.Run(async () =>
 			{
-				{"key", "Value"}
-			};
+				try
+				{
+					client = new MongoClient("mongodb://localhost:27217/");
+					db = client.GetDatabase("TestDB");
+					collection = db.GetCollection<BsonDocument>("TetsCollection");
 
-			await collection.InsertOneAsync(doc).ConfigureAwait(false);
+					var doc = new BsonDocument()
+					{
+						{"key", "Value"}
+					};
+
+					await collection.InsertOneAsync(doc).ConfigureAwait(false);
+					Console.Out.Write("Done!");
+				}
+				catch (Exception ex)
+				{
+					Console.Out.WriteLine($"Raise exception: {ex}");
+					throw;
+				}
+			}
+		//).ConfigureAwait(false);
 		}
 
 
 
-		static Task<int> MainAsync(string[] args)
+		static async Task<int> MainAsync(string[] args)
 		{
-			TestFunc();
+			TestFunc();  //!< Just call. Don't wait.
+			//await TestFunc().ConfigureAwait(false);
 
 			while (true)
 			{
 				Console.ReadKey();
 			}
 
-			return Task.FromResult(0);
+			return 0;
+			//return Task.FromResult(0);
 		}
 
 	}
