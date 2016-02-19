@@ -204,7 +204,7 @@ namespace MongoDB.Driver.Core.ConnectionPools
                     _openingEventHandler(new ConnectionPoolOpeningEvent(_serverId, _settings));
                 }
 
-                Task.Run(MaintainSizeAsync);
+                MaintainSizeAsync().ConfigureAwait(false);
 
                 if (_openedEventHandler != null)
                 {
